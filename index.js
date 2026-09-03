@@ -2,21 +2,17 @@ require('dotenv').config();
 const express = require('express');
 const { error } = require('node:console');
 
+const apiRouter = require('./api/main.js')
+
 const { PORT } = process.env
 
 const app = express()
 
-function middlewareLog(req, res, next) {
-  const ruta = req.path
-  console.log(`El usuario accede a ${ruta}`)
-  next()
-}
+app.use('/api', apiRouter);
 
-app.use(middlewareLog)
-
-app.get('/', (req, res) => {
-  console.log('Accedien do a la raiz')
-  res.send('Página principal')
+app.use((req, res, next) => {
+  console.log('El usuario intentó acceder a ', req.path)
+  res.status(404).send('Página no encontrada')
 })
 
 app.listen(PORT, (e) => {
