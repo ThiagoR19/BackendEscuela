@@ -1,12 +1,13 @@
 require('dotenv').config();
 const express = require('express');
-const { error } = require('node:console');
 
 const apiRouter = require('./api/main.js')
 
 const { PORT } = process.env
 
 const app = express()
+
+app.use(express.json())
 
 app.use('/api', apiRouter);
 
