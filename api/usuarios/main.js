@@ -55,7 +55,7 @@ router.delete('/:usuario_id', (req, res, next) => {
   db.query(SQL, [usuario_id])
     .then(([result, campos]) => {
       console.log(result, " ", campos)
-      res.status(204).send('Usuario eliminado')
+      res.status(200).send('Usuario eliminado')
     })
     .catch((e) => {
       console.error(e)
