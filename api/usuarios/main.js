@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const { hashPass } = require('./funciones.js')
 
 const db = require('../../db/conexion')
 
@@ -16,11 +17,14 @@ router.get('/', (req, res, next) => {
 
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const { nombre, user, pass } = req.body
 
   const SQL = 'insert into usuarios (nombre, user, pass) values (?,?,?)'
-  db.query(SQL, [nombre, user, pass])
+
+  const hash = await hashPass(pass)
+
+  db.query(SQL, [nombre, user, hash])
     .then(([result, campos]) => {
       console.log(result, " ", campos)
       res.status(201).send('Usuario creado')
