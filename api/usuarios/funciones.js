@@ -1,9 +1,6 @@
-// hash de contraseñas
-// comprobacion de contraseña
-// creacion de token de auth
-
 const bcrypt = require('bcrypt')
-const { SALT_ROUNDS } = process.env
+const jwt = require('jsonwebtoken')
+const { SALT_ROUNDS, TOKEN_SECRET } = process.env
 
 async function hashPass(passNueva) {
   const hash = await bcrypt.hash(passNueva, parseInt(SALT_ROUNDS));
@@ -16,4 +13,14 @@ async function verificarPass(passNueva, passHash) {
   return coincide;
 }
 
-module.exports = { hashPass, verificarPass }
+function crearToken(user) {
+  const payload = {
+    id: user.id,
+    nombre: user.nombre
+  }
+
+  const token = jwt.sign(payload, TOKEN_SECRET, { expiresIn: "2h" })
+  return token
+}
+
+module.exports = { hashPass, verificarPass, crearToken }

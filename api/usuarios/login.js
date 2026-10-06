@@ -1,4 +1,4 @@
-const { verificarPass } = require('./funciones')
+const { verificarPass, crearToken } = require('./funciones')
 const db = require('../../db/conexion')
 
 const router = require('express').Router()
@@ -13,12 +13,18 @@ router.post('/', (req, res, next) => {
       if (result.length === 1) {
         const userDB = result[0]
         const coincide = await verificarPass(pass, userDB.pass)
-        res.json({ coincide })
+        if (coincide) {
+          let token = crearToken(userDB)
+          res.status(200).json({ token })
+        } else {
+          res.status(403).send('Contraseña incorrecta')
+        }
       } else {
         res.status(401).send('Usuario no encontrado')
       }
     })
     .catch((e) => {
+      console.error(e)
       res.status(500).send('Ocurrió un error: ', e)
     })
 })
