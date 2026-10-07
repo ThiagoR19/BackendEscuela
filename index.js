@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path')
 
 const apiRouter = require('./api/main.js')
 
@@ -10,6 +11,9 @@ const app = express()
 app.use(express.json())
 
 app.use('/api', apiRouter);
+
+app.use('/archivos', express.static('archivos'))
+
 
 app.use((req, res, next) => {
   console.log('El usuario intentó acceder a ', req.path)
